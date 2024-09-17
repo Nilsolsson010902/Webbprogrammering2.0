@@ -19,13 +19,13 @@ function ComposeSalad({inventory, addSalad }) {
  };
 
  const handleExtrasChange  = (event) => { //lär dig förstå allt rakt igenom
-   const { name, checked } = event.target;
-   setExtra((prevExtras) => {
+   const { name, checked } = event.target; //refers to the checkbox, {name, checked} extracts name and chekced properties from the event target
+   setExtra((prevExtras) => {              //he argument prevExtras represents the current extras state, which contains the previously selected extras
     const newExtras = { ...prevExtras };
     if (checked) {
-      newExtras[name] = true;
+      newExtras[name] = true;   //if the checkbox is checked , the extra that is represented by name will be added to the new extras object
     } else {
-      delete newExtras[name];
+      delete newExtras[name]; //the opposite
     }
     return newExtras;
   });
