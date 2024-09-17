@@ -2,10 +2,21 @@
 import 'bootstrap/dist/css/bootstrap.css'
 import inventory from './inventory.mjs';
 import ComposeSalad from './ComposeSalad';
+import { useState } from 'react';
+import ViewOrder from './ViewOrder';
 
 
 function App() {
  let extras = Object.keys(inventory).filter(name => inventory[name].extra);
+
+ const [shoppingCart, setShoppingCart] = useState([]); //shopping cart state variable
+
+ const handleAddSalad = (salad) => {                    //adds salad when user submits one
+  setShoppingCart((prevCart) => [...prevCart, salad]);
+};
+
+
+
  return (
    <div className="container py-4">
      <header className="pb-3 mb-4 border-bottom">
@@ -13,15 +24,9 @@ function App() {
      </header>
 
 
-     <div className="container col-12">
-       <div className="row h-200 p-5 bg-light border rounded-3">
-         <h2>Välj innehållet i din sallad</h2>
-         {extras.map(name => <div key={name} className="col-4">{name}</div>)}
-       </div>
-     </div>
 
-
-     <ComposeSalad inventory={inventory}></ComposeSalad>
+     <ComposeSalad inventory={inventory} addSalad ={handleAddSalad}></ComposeSalad>
+     <ViewOrder shoppingCart={shoppingCart} inventory={inventory} />
 
 
      <footer className="pt-3 mt-4 text-muted border-top">

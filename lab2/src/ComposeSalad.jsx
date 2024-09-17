@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import ListSorter from './ListSorter';
 import Select from './Select';
-import inventory from './inventory.mjs';
+import Salad from './Salad';
+import { v4 as uuidv4 } from 'uuid';
 
 
-function ComposeSalad(props) {
+function ComposeSalad({inventory, addSalad }) {
 
 
- const [protein, setProtein] = useState('Kycklingfilé');
+ const [protein, setProtein] = useState('Kycklingfilé');  //state variables
  const [foundation, setFoundation] = useState('Pasta');
  const [extras, setExtra] = useState({ Bacon: true, Fetaost: true });
  const [dressing, setDressing] = useState('Rostad aioli');
@@ -17,14 +18,18 @@ function ComposeSalad(props) {
    setFoundation(event.target.value);  // Update state based on the selected option
  };
 
-
  const handleExtrasChange  = (event) => { //lär dig förstå allt rakt igenom
    const { name, checked } = event.target;
-   setExtra((prevExtras) => ({
-     ...prevExtras,
-     [name]: checked,
-   }));
- };
+   setExtra((prevExtras) => {
+    const newExtras = { ...prevExtras };
+    if (checked) {
+      newExtras[name] = true;
+    } else {
+      delete newExtras[name];
+    }
+    return newExtras;
+  });
+};
 
 
  const handleProteinChange = (event) => {
@@ -36,10 +41,29 @@ function ComposeSalad(props) {
    setDressing(event.target.value);  // Update state based on the selected option
  };
 
+ const handleSubmitSaladForm = (event) => {
+    event.preventDefault(); // Prevent default form submission
+    const newSalad = new Salad(
+        foundation,
+        protein,
+        extras,
+        dressing,
+        uuidv4()  // Generate a unique UUID for each new Salad
+      );
+
+    addSalad(newSalad); // Pass the salad to the parent component
+
+    // Clear the form
+    setFoundation('Pasta');
+    setProtein('Kycklingfilé');
+    setExtra({ Bacon: true, Fetaost: true });
+    setDressing('Rostad aioli');
+  };
 
 
 
   return ( //render function
+   <form onSubmit={handleSubmitSaladForm}>
    <div className="continer col-12">
      <div className="row h-200 p-5 bg-light border rounded-3">
        <h2>Välj innehållet i din sallad</h2>
@@ -48,7 +72,7 @@ function ComposeSalad(props) {
          label="Välj bas: "
          onChange={handleFoundationChange}
          value={foundation}
-         options= {ListSorter({ inventory: props.inventory, saladComponent: 'foundation' })}>
+         options= {ListSorter({ inventory: inventory, saladComponent: 'foundation' })}>
          </Select>
        </fieldset>
        </div>
@@ -60,7 +84,7 @@ function ComposeSalad(props) {
          label="Välj protein: "
          onChange={handleProteinChange}
          value={protein}
-         options={ListSorter({inventory: props.inventory, saladComponent: 'protein'})} >
+         options={ListSorter({inventory: inventory, saladComponent: 'protein'})} >
          </Select>
        </fieldset>
        </div>
@@ -72,7 +96,7 @@ function ComposeSalad(props) {
          label="Välj dressing: "
          onChange={handleDressingChange}
          value={dressing}
-         options={ListSorter({inventory: props.inventory, saladComponent: 'dressing'})} >
+         options={ListSorter({inventory: inventory, saladComponent: 'dressing'})} >
          </Select>
        </fieldset>
        </div>
@@ -83,7 +107,7 @@ function ComposeSalad(props) {
        <fieldset>
          <label>Välj extra tillbehör (max 2): </label>
          <div className="col-4">
-         {ListSorter({inventory: props.inventory, saladComponent: 'extra'})
+         {ListSorter({inventory: inventory, saladComponent: 'extra'})
          .map((extra) => (
 
 
@@ -101,12 +125,13 @@ function ComposeSalad(props) {
          }
          </div>
        </fieldset>
+
        </div>
-
-
+       <button type="submit">Lägg till sallad</button>
      </div>
    </div>
- );
+   </form>
+);
  }
 export default ComposeSalad;
 
