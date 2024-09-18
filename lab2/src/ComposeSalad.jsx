@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import ListSorter from './ListSorter';
 import Select from './Select';
 import Salad from './Salad';
@@ -18,16 +18,16 @@ function ComposeSalad({inventory, addSalad }) {
    setFoundation(event.target.value);  // Update state based on the selected option
  };
 
- const handleExtrasChange  = (event) => { //lär dig förstå allt rakt igenom
+ const handleExtrasChange  = (event) => { //the state is updated immutably, instead of modyfying the extras object directly we create a copy
    const { name, checked } = event.target; //refers to the checkbox, {name, checked} extracts name and chekced properties from the event target
    setExtra((prevExtras) => {              //he argument prevExtras represents the current extras state, which contains the previously selected extras
-    const newExtras = { ...prevExtras };
+    const newExtras = { ...prevExtras }; //shallow copy
     if (checked) {
       newExtras[name] = true;   //if the checkbox is checked , the extra that is represented by name will be added to the new extras object
     } else {
       delete newExtras[name]; //the opposite
     }
-    return newExtras;
+    return newExtras;  //passes the new extra to the setExtra function
   });
 };
 
@@ -62,8 +62,8 @@ function ComposeSalad({inventory, addSalad }) {
 
 
 
-  return ( //render function
-   <form onSubmit={handleSubmitSaladForm}>
+  return ( //render function, onSubmit is triggerd when the user presses the submit button
+   <form onSubmit={handleSubmitSaladForm}>   
    <div className="continer col-12">
      <div className="row h-200 p-5 bg-light border rounded-3">
        <h2>Välj innehållet i din sallad</h2>
@@ -141,7 +141,9 @@ export default ComposeSalad;
 // a component. In essence, it introduces complexity and unpredictability, making the component less reliable and harder to maintain.
 
 
-//reflection 2:
+//reflection 2:You can use useMemo() rather than useEffect in this scenario. 
+//The useMemo hook allows you to cache the computed values and only recompute them when dependencies change, 
+//which is more suitable here since we want to compute the foundations when inventory changes. 
 
 
 //reflection 3: this would violate SRP since it would give the Select component more responsibility
@@ -150,3 +152,18 @@ export default ComposeSalad;
 //Another issue with moving the foundation state into the Select component is that
 // we would have to implement some form of state lifting instead of just having communication through callbacks
 //to the parrent with our "handleChange" functions, when a change is made.
+
+//reflection 4: The thing that triggers the render functions is the eventhandlers in composeSalad that listens for change
+// in state it can be onClick such asd for the button or onChange/onClick for the dropboxes and checkboxes. 
+
+//reflection 5: No changing the HTML form state (DOM) does not directly change the state of the react component. 
+//React’s state is separate from the DOM and is managed through the component's state variables for example useState.
+// To synchronize the component's state with changes in the DOM (such as user input), you need to use event handlers in React.
+
+//reflection 6: The callback function in react doesn’t work the same as a class components. In functional components, 
+//there is no this because functional components don’t have instances (unlike class components).
+
+//reflection 7: in this case we create what is known as a shallow copy and this means that the properties of 
+//the sourceObject are copied into a new object however the prototype chain of the new object will not be inherited 
+//from the original object, i.e the prototype chain is not affected at all. The copy will have a default prototype chain
+// in the fomr of Object.prototype

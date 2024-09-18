@@ -1,3 +1,4 @@
+//dropdown display of salad components
 
 import { useId } from "react";
 function Select({ label, onChange, value, options }) {
