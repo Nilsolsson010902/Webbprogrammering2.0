@@ -1,28 +1,39 @@
 import { v4 as uuidv4 } from 'uuid';
 class Salad{
-    constructor(foundation, protein, extras, dressing, uuid) {
-        this.foundation = foundation;
-        this.protein = protein;
-        this.extras = extras;
-        this.dressing = dressing;
-        this.uuid = uuid;
-      }
-    
-     
-    getTotalPrice(inventory) {                                    //calculates price of entire salad
-        let totalPrice = 0;
-        totalPrice += inventory[this.foundation].price || 0;
-        totalPrice += inventory[this.protein].price || 0;
-    
-        for (const extra in this.extras) {
-          if (this.extras[extra]) {
-            totalPrice += inventory[extra].price || 0;
+        static instanceCounter = 0; 
+        
+        constructor(arg) { 
+          const uuid = uuidv4();
+          this.id = 'salad_' + Salad.instanceCounter++;
+          if (arg instanceof Salad){
+            this.ingredients = {...arg.ingredients};
+            this.uuid = uuidv4();
+      
+            if (arg.uuid) {
+              this.uuid = arg.uuid;  // Preserve UUID if provided (parse case)
+            }
+          }
+          else{
+            this.ingredients = {};
+            this.uuid = uuidv4();
           }
         }
-    
-        totalPrice += inventory[this.dressing].price || 0;
-        return totalPrice;
-      }
-}
+        add(name, properties) { 
+          this.ingredients[name] = properties;
+          return this;
+        }
+        remove(name) { 
+            if(this.ingredients.hasOwnProperty(name)){
+            delete this.ingredients[name];
+        }
+        return this;
+        }
+        getPrice() {
+            return Object.values(this.ingredients).reduce((total, ingredient) => total + ingredient.price, 0);
+        }
+        count(property) {
+            return Object.values(this.ingredients).filter(ingredient => ingredient[property] === true).length;
+        } 
+    }
 
 export default Salad;

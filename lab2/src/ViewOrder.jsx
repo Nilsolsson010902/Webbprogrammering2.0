@@ -6,14 +6,9 @@ function ViewOrder({ shoppingCart, inventory }) {
       {shoppingCart.map((salad) => (
         <div key={salad.uuid} className="salad-item">
           <h3>Salad {salad.uuid}</h3>
-          <p>Foundation: {salad.foundation}</p>
-          <p>Protein: {salad.protein}</p>
-          <p>Dressing: {salad.dressing}</p>
-          <p>
-            Extras: {Object.keys(salad.extras).length > 0 ? 
-            Object.keys(salad.extras).join(', ') : 'None'}
-          </p>
-          <p>Total Price: {salad.getTotalPrice(inventory)} kr</p>
+          <p>Ingredients: {Object.keys(salad.ingredients).join(', ')}</p>
+        
+          <p>Total Price: {salad.getPrice()} kr</p>
         </div>
       ))}
     </div>

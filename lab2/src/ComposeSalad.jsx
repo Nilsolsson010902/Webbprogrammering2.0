@@ -43,17 +43,15 @@ function ComposeSalad({inventory, addSalad }) {
 
  const handleSubmitSaladForm = (event) => {
     event.preventDefault(); // Prevent default form submission
-    const newSalad = new Salad(
-        foundation,
-        protein,
-        extras,
-        dressing,
-        uuidv4()  // Generate a unique UUID for each new Salad
-      );
+    const newSalad = new Salad()
+        .add(foundation, inventory[foundation])
+        .add(protein, inventory[protein])
+        .add(dressing, inventory[dressing])
 
+        Object.keys(extras).forEach(extra=> newSalad.add(extra, inventory[extra]))
+            
     addSalad(newSalad); // Pass the salad to the parent component
 
-    // Clear the form
     setFoundation('Pasta');
     setProtein('Kycklingfilé');
     setExtra({ Bacon: true, Fetaost: true });
@@ -72,7 +70,7 @@ function ComposeSalad({inventory, addSalad }) {
          label="Välj bas: "
          onChange={handleFoundationChange}
          value={foundation}
-         options= {ListSorter({ inventory: inventory, saladComponent: 'foundation' })}>
+         options= {ListSorter({ inventory, saladComponent: 'foundation' })}>
          </Select>
        </fieldset>
        </div>
@@ -84,7 +82,7 @@ function ComposeSalad({inventory, addSalad }) {
          label="Välj protein: "
          onChange={handleProteinChange}
          value={protein}
-         options={ListSorter({inventory: inventory, saladComponent: 'protein'})} >
+         options={ListSorter({inventory, saladComponent: 'protein'})} >
          </Select>
        </fieldset>
        </div>
@@ -96,7 +94,7 @@ function ComposeSalad({inventory, addSalad }) {
          label="Välj dressing: "
          onChange={handleDressingChange}
          value={dressing}
-         options={ListSorter({inventory: inventory, saladComponent: 'dressing'})} >
+         options={ListSorter({inventory, saladComponent: 'dressing'})} >
          </Select>
        </fieldset>
        </div>
@@ -160,8 +158,9 @@ export default ComposeSalad;
 //React’s state is separate from the DOM and is managed through the component's state variables for example useState.
 // To synchronize the component's state with changes in the DOM (such as user input), you need to use event handlers in React.
 
-//reflection 6: The callback function in react doesn’t work the same as a class components. In functional components, 
-//there is no this because functional components don’t have instances (unlike class components).
+//reflection 6: we use the arrow function (=>) instead of this in our eventhandlers because it refers to the react
+//component instance, the function inherits it from the surounding scope.
+//Since React functional components don’t have their own this like class components. 
 
 //reflection 7: in this case we create what is known as a shallow copy and this means that the properties of 
 //the sourceObject are copied into a new object however the prototype chain of the new object will not be inherited 
