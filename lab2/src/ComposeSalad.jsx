@@ -2,16 +2,19 @@ import { useMemo, useState } from 'react';
 import ListSorter from './ListSorter';
 import Select from './Select';
 import Salad from './Salad';
-import { v4 as uuidv4 } from 'uuid';
+import { useOutletContext } from 'react-router-dom';
 
 
-function ComposeSalad({inventory, addSalad }) {
+function ComposeSalad() {
 
 
- const [protein, setProtein] = useState('Kycklingfilé');  //state variables
- const [foundation, setFoundation] = useState('Pasta');
+ const [protein, setProtein] = useState('');  //state variables
+ const [foundation, setFoundation] = useState('');
  const [extras, setExtra] = useState({ Bacon: true, Fetaost: true });
- const [dressing, setDressing] = useState('Rostad aioli');
+ const [dressing, setDressing] = useState('');
+ const [touched, setTouched] = useState(false);
+ const [formError, setFormError] = useState(false);
+
 
 
  const handleFoundationChange = (event) => {
@@ -42,7 +45,17 @@ function ComposeSalad({inventory, addSalad }) {
  };
 
  const handleSubmitSaladForm = (event) => {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault();
+
+    if(!event.target.checkValidity()){
+      setTouched(true);
+      setFormError(true);
+      return
+    }
+
+    setFormError(false);
+    setTouched(false)
+    
     const newSalad = new Salad()
         .add(foundation, inventory[foundation])
         .add(protein, inventory[protein])
@@ -50,18 +63,21 @@ function ComposeSalad({inventory, addSalad }) {
 
         Object.keys(extras).forEach(extra=> newSalad.add(extra, inventory[extra]))
             
-    addSalad(newSalad); // Pass the salad to the parent component
+    handleAddSalad(newSalad); 
 
-    setFoundation('Pasta');
-    setProtein('Kycklingfilé');
+    setFoundation('');
+    setProtein('');
     setExtra({ Bacon: true, Fetaost: true });
-    setDressing('Rostad aioli');
+    setDressing('');
   };
+
+ const { inventory, handleAddSalad } = useOutletContext();
 
 
 
   return ( //render function, onSubmit is triggerd when the user presses the submit button
-   <form onSubmit={handleSubmitSaladForm}>   
+   <form onSubmit={handleSubmitSaladForm} className={touched ? "was-validated" : ""}
+   noValidate>   
    <div className="continer col-12">
      <div className="row h-200 p-5 bg-light border rounded-3">
        <h2>Välj innehållet i din sallad</h2>
@@ -125,6 +141,11 @@ function ComposeSalad({inventory, addSalad }) {
        </fieldset>
 
        </div>
+        {formError && (
+          <div className="text-danger">
+            Vänligen välj en bas, ett protein och en dressing för din sallad.
+          </div>
+        )}
        <button type="submit">Lägg till sallad</button>
      </div>
    </div>

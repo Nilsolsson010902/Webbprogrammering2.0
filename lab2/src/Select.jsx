@@ -6,12 +6,14 @@ function Select({ label, onChange, value, options }) {
  return (
    <div className="form-group">
      <label htmlFor={id} className="form-label">{label}</label>
-     <select className="form-select" onChange={onChange} value={value} id={id}>
+     <select required className="form-select" onChange={onChange} value={value} id={id}>
+         <option value=""></option>
        {options.map((option) => (
          <option value={option.name} key={option.name}>
            {option.name}, {option.price} kr
          </option>
        ))}
+       
      </select>
    </div>
  );
