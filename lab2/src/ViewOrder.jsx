@@ -1,12 +1,14 @@
 import React from 'react';
 import { useOutletContext } from 'react-router-dom';
 
-
 function ViewOrder() {
-
-  const { shoppingCart } = useOutletContext();
-  console.log('Shopping Cart in ViewOrder:', shoppingCart);
+  
+  const {shoppingCart}= useOutletContext();
+  console.log("Shopping Cart in ViewOrder:", shoppingCart);
+ 
   return (
+    <div key={shoppingCart.length}> 
+
     <div>
       {shoppingCart.map((salad) => (
         <div key={salad.uuid} className="salad-item">
@@ -16,7 +18,7 @@ function ViewOrder() {
         </div>
       ))}
     </div>
-
+    </div>
   );
 }
 

@@ -62,8 +62,12 @@ function ComposeSalad() {
         .add(dressing, inventory[dressing])
 
         Object.keys(extras).forEach(extra=> newSalad.add(extra, inventory[extra]))
-            
+    
+    console.log("Adding Salad:", newSalad); // Log the salad being added
+
     handleAddSalad(newSalad); 
+    
+    
 
     setFoundation('');
     setProtein('');
