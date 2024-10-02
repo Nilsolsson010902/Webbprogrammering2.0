@@ -3,6 +3,7 @@ import ListSorter from './ListSorter';
 import Select from './Select';
 import Salad from './Salad';
 import { useOutletContext } from 'react-router-dom';
+import { useNavigate } from "react-router-dom"
 
 
 function ComposeSalad() {
@@ -14,6 +15,8 @@ function ComposeSalad() {
  const [dressing, setDressing] = useState('');
  const [touched, setTouched] = useState(false);
  const [formError, setFormError] = useState(false);
+
+ const navigate = useNavigate();
 
 
 
@@ -67,6 +70,7 @@ function ComposeSalad() {
 
     handleAddSalad(newSalad); 
     
+    navigate(`/view-order/confirm/${newSalad.uuid}`);
     
 
     setFoundation('');

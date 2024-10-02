@@ -1,20 +1,27 @@
-import { Component } from "react";
-import { createBrowserRouter, Route } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import App from './App';
 import ComposeSalad from "./ComposeSalad";
 import ViewOrder from "./ViewOrder";
+import Confirmation from "./Confirmation"; // We'll create this component next
 
 const router = createBrowserRouter([
   {
-    Component: App,
+    path: '/', // It's good practice to define the root path
+    element: <App />, // Changed from Component to element for consistency
     children: [
       {
         path: 'compose-salad',
-        Component: ComposeSalad,
+        element: <ComposeSalad />,
       },
       {
         path: 'view-order',
-        Component: ViewOrder,
+        element: <ViewOrder />,
+        children: [
+          {
+            path: 'confirm/:uuid',
+            element: <Confirmation />,
+          },
+        ],
       },
       {
         index: true,
@@ -23,10 +30,9 @@ const router = createBrowserRouter([
       {
         path: '*',
         element: <p>Page not found</p>,
-    }
+      }
     ],
   },
-
-  
 ]);
+
 export default router;

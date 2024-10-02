@@ -1,25 +1,31 @@
 import React from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, Outlet } from 'react-router-dom';
 
 function ViewOrder() {
-  
-  const {shoppingCart}= useOutletContext();
+  const { shoppingCart } = useOutletContext();
   console.log("Shopping Cart in ViewOrder:", shoppingCart);
- 
-  return (
-    <div key={shoppingCart.length}> 
 
+  return (
     <div>
-      {shoppingCart.map((salad) => (
-        <div key={salad.uuid} className="salad-item">
-          <h3>Salad {salad.uuid}</h3>
-          <p>Ingredients: {Object.keys(salad.ingredients).join(', ')}</p>
-          <p>Total Price: {salad.getPrice()} kr</p>
+      <h2>Your Shopping Cart</h2>
+      {shoppingCart.length === 0 ? (
+        <p>Your shopping cart is empty.</p>
+      ) : (
+        <div>
+          {shoppingCart.map((salad) => (
+            <div key={salad.uuid} className="salad-item border p-3 mb-2">
+              <h3>Salad {salad.uuid}</h3>
+              <p>Ingredients: {Object.keys(salad.ingredients).join(', ')}</p>
+              <p>Total Price: {salad.getPrice()} kr</p>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+      )}
+      {/* Render child routes here */}
+      <Outlet context = { shoppingCart } />
     </div>
   );
 }
 
 export default ViewOrder;
+
