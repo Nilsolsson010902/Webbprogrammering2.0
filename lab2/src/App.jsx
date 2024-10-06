@@ -4,7 +4,6 @@ import inventory from './inventory.mjs';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import React from 'react';
-import { useEffect } from 'react';
 import Navbar from './Navbar';
 
 function App(props) {
@@ -18,10 +17,6 @@ function App(props) {
   setShoppingCart([...shoppingCart, salad]);
 
 };
-
-useEffect(() => {
-  console.log(shoppingCart); // Log the shopping cart whenever it updates
-}, [shoppingCart]);
 
  return (
  

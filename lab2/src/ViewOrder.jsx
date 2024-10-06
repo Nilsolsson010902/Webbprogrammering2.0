@@ -3,7 +3,7 @@ import { useOutletContext, Outlet } from 'react-router-dom';
 
 function ViewOrder() {
   const { shoppingCart } = useOutletContext();
-  console.log("Shopping Cart in ViewOrder:", shoppingCart);
+
 
   return (
     <div>
@@ -22,7 +22,7 @@ function ViewOrder() {
         </div>
       )}
       {/* Render child routes here */}
-      <Outlet context = { shoppingCart } />
+      <Outlet context = { {shoppingCart }} />
     </div>
   );
 }

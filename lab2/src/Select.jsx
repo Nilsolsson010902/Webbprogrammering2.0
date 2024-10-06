@@ -15,6 +15,9 @@ function Select({ label, onChange, value, options }) {
        ))}
        
      </select>
+     <div className = 'invalid-feedback'>
+      <p>Välj</p>
+     </div>
    </div>
  );
 }

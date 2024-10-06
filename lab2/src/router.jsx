@@ -6,20 +6,20 @@ import Confirmation from "./Confirmation"; // We'll create this component next
 
 const router = createBrowserRouter([
   {
-    path: '/', // It's good practice to define the root path
-    element: <App />, // Changed from Component to element for consistency
+    path: '/', 
+    Component: App,
     children: [
       {
         path: 'compose-salad',
-        element: <ComposeSalad />,
+        Component: ComposeSalad,
       },
       {
         path: 'view-order',
-        element: <ViewOrder />,
+        Component: ViewOrder,
         children: [
           {
             path: 'confirm/:uuid',
-            element: <Confirmation />,
+            Component: Confirmation,
           },
         ],
       },
