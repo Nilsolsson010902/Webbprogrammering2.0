@@ -26,7 +26,7 @@ function App(props) {
      </header>
      <Navbar></Navbar>
 
-     <Outlet context={{ inventory, handleAddSalad, shoppingCart}} />
+     <Outlet context={{ handleAddSalad, shoppingCart}} />
 
      <footer className="pt-3 mt-4 text-muted border-top">
        EDAF90 - webprogrammering

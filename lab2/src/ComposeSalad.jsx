@@ -4,10 +4,12 @@ import Select from './Select';
 import Salad from './Salad';
 import { useOutletContext } from 'react-router-dom';
 import { useNavigate } from "react-router-dom"
+import { useLoaderData } from 'react-router-dom';
 
 
 function ComposeSalad() {
 
+ const inventory = useLoaderData();
 
  const [protein, setProtein] = useState('');  //state variables
  const [foundation, setFoundation] = useState('');
@@ -79,7 +81,7 @@ function ComposeSalad() {
     setDressing('');
   };
 
- const { inventory, handleAddSalad } = useOutletContext();
+ const { handleAddSalad } = useOutletContext();
 
 
 
