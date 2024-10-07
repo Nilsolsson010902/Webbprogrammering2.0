@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import ListSorter from './ListSorter';
 import Select from './Select';
 import Salad from './Salad';
 import { useOutletContext } from 'react-router-dom';
@@ -10,6 +9,8 @@ import { useLoaderData } from 'react-router-dom';
 function ComposeSalad() {
 
  const inventory = useLoaderData();
+
+ console.log(inventory);
 
  const [protein, setProtein] = useState('');  //state variables
  const [foundation, setFoundation] = useState('');
@@ -62,11 +63,11 @@ function ComposeSalad() {
     setTouched(false)
     
     const newSalad = new Salad()
-        .add(foundation, inventory[foundation])
-        .add(protein, inventory[protein])
-        .add(dressing, inventory[dressing])
+        .add(foundation, inventory.foundations[foundation])
+        .add(protein, inventory.proteins[protein])
+        .add(dressing, inventory.dressings[dressing])
 
-        Object.keys(extras).forEach(extra=> newSalad.add(extra, inventory[extra]))
+        Object.keys(extras).forEach(extra=> newSalad.add(extra, inventory.extras[extra]))
     
     console.log("Adding Salad:", newSalad); // Log the salad being added
 
@@ -89,6 +90,7 @@ function ComposeSalad() {
    <form onSubmit={handleSubmitSaladForm} className={touched ? "was-validated" : ""}
    noValidate>   
    <div className="continer col-12">
+
      <div className="row h-200 p-5 bg-light border rounded-3">
        <h2>Välj innehållet i din sallad</h2>
        <fieldset className="col-md-12">
@@ -96,7 +98,10 @@ function ComposeSalad() {
          label="Välj bas: "
          onChange={handleFoundationChange}
          value={foundation}
-         options= {ListSorter({ inventory, saladComponent: 'foundation' })}>
+         options= {Object.keys(inventory.foundations).map(name => ({
+          name,
+          price: inventory.foundations[name].price
+      }))}>
          </Select>
        </fieldset>
        </div>
@@ -108,7 +113,10 @@ function ComposeSalad() {
          label="Välj protein: "
          onChange={handleProteinChange}
          value={protein}
-         options={ListSorter({inventory, saladComponent: 'protein'})} >
+         options= {Object.keys(inventory.proteins).map(name => ({
+          name,
+          price: inventory.proteins[name].price
+      }))}> 
          </Select>
        </fieldset>
        </div>
@@ -120,7 +128,10 @@ function ComposeSalad() {
          label="Välj dressing: "
          onChange={handleDressingChange}
          value={dressing}
-         options={ListSorter({inventory, saladComponent: 'dressing'})} >
+         options= {Object.keys(inventory.dressings).map(name => ({
+          name,
+          price: inventory.dressings[name].price
+      }))}>
          </Select>
        </fieldset>
        </div>
@@ -131,19 +142,16 @@ function ComposeSalad() {
        <fieldset>
          <label>Välj extra tillbehör (max 2): </label>
          <div className="col-4">
-         {ListSorter({inventory: inventory, saladComponent: 'extra'})
-         .map((extra) => (
-
-
-           <label key={extra.name}>
-             <input
-               type="checkbox"
-               name={extra.name}
-               checked={!!extras[extra.name]} // Ensure checked is always boolean i.e not assigning undefined to html atribute
-               onChange={handleExtrasChange}
-             />
-             {extra.name}  {extra.price} kr: 
-           </label>
+         {Object.keys(inventory.extras).map(extra => (
+            <label key={extra}>
+                <input
+                    type="checkbox"
+                    name={extra}
+                    checked={!!extras[extra]} // Ensure checked is always boolean
+                    onChange={handleExtrasChange}
+                />
+                {extra} {inventory.extras[extra].price} kr
+            </label>
           
            ))
          }

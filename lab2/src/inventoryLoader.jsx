@@ -1,11 +1,22 @@
-import fetchCategory from "./fetchCategory";
-import safeFetchJson from "./safeFetchJson";
 
+import fetchCategory from "./fetchCategory";
 async function inventoryLoader() {
+    const [foundations, proteins, extras, dressings] = await Promise.all([
+        fetchCategory('foundations'),
+        fetchCategory('proteins'),
+        fetchCategory('extras'),
+        fetchCategory('dressings')
+      ]);
     
-    await new Promise(resolve => setTimeout(resolve, 500));
-    console.log(fetchCategory('foundations'))
-    return fetchCategory('foundations');
-    }
+      
+      const inventory = {
+        foundations,
+        proteins,
+        extras,
+        dressings
+      };
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      return inventory; 
+}
 
 export default inventoryLoader;

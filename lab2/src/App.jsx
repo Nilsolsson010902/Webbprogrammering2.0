@@ -1,6 +1,5 @@
 
 import 'bootstrap/dist/css/bootstrap.css'
-import inventory from './inventory.mjs';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import React from 'react';
