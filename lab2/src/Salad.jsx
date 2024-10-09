@@ -10,7 +10,7 @@ class Salad{
             this.uuid = uuidv4();
       
             if (arg.uuid) {
-              this.uuid = arg.uuid;  // Preserve UUID if provided (parse case)
+              this.uuid = arg.uuid;  
             }
           }
           else{
@@ -34,6 +34,14 @@ class Salad{
         count(property) {
             return Object.values(this.ingredients).filter(ingredient => ingredient[property] === true).length;
         } 
+
+        static parse(saladData){
+          const salad = new Salad()
+          salad.uuid = saladData.uuid;
+          salad.ingredients = { ...saladData.ingredients };
+          return salad
+
+        }
     }
 
 export default Salad;

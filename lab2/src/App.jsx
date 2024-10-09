@@ -1,39 +1,57 @@
 
 import 'bootstrap/dist/css/bootstrap.css'
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigation } from 'react-router-dom';
 import React from 'react';
 import Navbar from './Navbar';
+import BootstrapSpinner from './BootstrapSpinner'
+import Salad from './Salad'
 
 function App(props) {
 
 
- const [shoppingCart, setShoppingCart] = useState([]); //shopping cart state variable
-
-
-
  const handleAddSalad = (salad) => {                    //adds salad when user submits one
-  setShoppingCart([...shoppingCart, salad]);
+  const updatedCart = [...shoppingCart, salad];
+  setShoppingCart(updatedCart);
+  localStorage.setItem('shoppingCart', JSON.stringify(updatedCart));
 
 };
 
- return (
- 
-   <div className="container py-4">
-     <header className="pb-3 mb-4 border-bottom">
-       <span className="fs-4">Min egen salladsbar</span>
-     </header>
-     <Navbar></Navbar>
+  const initializeShoppingCart = () => {
+    const storedCart = localStorage.getItem('shoppingCart');
+    if (storedCart){
+      const parsedCart = JSON.parse(storedCart).map((saladData) => Salad.parse(saladData));
+      return parsedCart;
+    }
+  }
 
-     <Outlet context={{ handleAddSalad, shoppingCart}} />
 
-     <footer className="pt-3 mt-4 text-muted border-top">
-       EDAF90 - webprogrammering
-     </footer>
-   </div>
-   
+ const [shoppingCart, setShoppingCart] = useState(initializeShoppingCart); //shopping cart state variable
+ const navigation = useNavigation();
+ const isLoading = navigation.state === 'loading'
 
- );
+
+
+
+return (
+  <div className="container py-4">
+    <header className="pb-3 mb-4 border-bottom">
+      <span className="fs-4">Min egen salladsbar</span>
+    </header>
+
+    {/* Navigation bar */}
+    <Navbar />
+
+    {/* Show spinner if loading; otherwise, render Outlet with context */}
+    {isLoading ? (
+      <BootstrapSpinner />
+    ) : (
+      <Outlet context={{ handleAddSalad, shoppingCart }} />
+    )}
+
+    <footer className="pt-3 mt-4 text-muted border-top">EDAF90 - webprogrammering</footer>
+  </div>
+);
 }
 
 

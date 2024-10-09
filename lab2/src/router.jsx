@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import App from './App';
 import ComposeSalad from "./ComposeSalad";
 import ViewOrder from "./ViewOrder";
-import Confirmation from "./Confirmation"; // We'll create this component next
+import Confirmation from "./Confirmation"; 
 import inventoryLoader from "./inventoryLoader";
 const router = createBrowserRouter([
   {
