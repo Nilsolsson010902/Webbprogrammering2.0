@@ -22,15 +22,19 @@ function App(props) {
     if (storedCart){
       const parsedCart = JSON.parse(storedCart).map((saladData) => Salad.parse(saladData));
       return parsedCart;
+    } else{
+    return [];
     }
   }
-
 
  const [shoppingCart, setShoppingCart] = useState(initializeShoppingCart); //shopping cart state variable
  const navigation = useNavigation();
  const isLoading = navigation.state === 'loading'
-
-
+ 
+ const clearCart = () => {
+  setShoppingCart([]);
+  localStorage.removeItem('shoppingCart'); // Optionally clear local storage
+};
 
 
 return (
@@ -46,7 +50,7 @@ return (
     {isLoading ? (
       <BootstrapSpinner />
     ) : (
-      <Outlet context={{ handleAddSalad, shoppingCart }} />
+      <Outlet context={{ handleAddSalad, shoppingCart, clearCart }} />
     )}
 
     <footer className="pt-3 mt-4 text-muted border-top">EDAF90 - webprogrammering</footer>

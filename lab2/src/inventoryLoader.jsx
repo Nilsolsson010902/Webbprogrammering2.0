@@ -15,7 +15,7 @@ async function inventoryLoader() {
         extras,
         dressings
       };
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      await new Promise(resolve => setTimeout(resolve, 500));
       return inventory; 
 }
 

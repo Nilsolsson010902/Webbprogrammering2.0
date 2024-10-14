@@ -4,8 +4,8 @@ import safeFetchJson from "./safeFetchJson";
 async function fetchCategory(category) {
 
 const url = `http://localhost:8080/${category}`;
-  const names = await safeFetchJson(url); 
-  const ingredientPromises = names.map(name => fetchIngredient(category, name)); 
+  const ingredients = await safeFetchJson(url); 
+  const ingredientPromises = ingredients.map(ingredient => fetchIngredient(category, ingredient)); 
   const ingredientsArray = await Promise.all(ingredientPromises); 
   return Object.assign({}, ...ingredientsArray);
 }

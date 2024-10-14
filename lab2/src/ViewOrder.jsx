@@ -3,7 +3,7 @@ import { useOutletContext, Outlet } from 'react-router-dom';
 import {useState} from 'react'
 
 function ViewOrder() {
-  const { shoppingCart } = useOutletContext();
+  const { shoppingCart, clearCart } = useOutletContext();
 
   const [confirmation, setConfirmation] = useState();
   const [showToast, setShowToast] = useState(false);
@@ -11,7 +11,6 @@ function ViewOrder() {
   const prepareOrder = () => {
     return shoppingCart.map((salad) => Object.keys(salad.ingredients))
   }
-
   const placeOrder = async () => {
     const order = prepareOrder();
     const response = await fetch('http://localhost:8080/orders/', {
@@ -22,8 +21,10 @@ function ViewOrder() {
       body: JSON.stringify(order)
     })
     const result = await response.json();
+    console.log(result);
     setConfirmation(result);
     setShowToast(true);
+    clearCart();
   }
 
 
@@ -39,8 +40,11 @@ function ViewOrder() {
               <h3>Salad {salad.uuid}</h3>
               <p>Ingredients: {Object.keys(salad.ingredients).join(', ')}</p>
               <p>Total Price: {salad.getPrice()} kr</p>
+              
             </div>
+            
           ))}
+          <Outlet context = {{shoppingCart}}> </Outlet>
         </div>
       )}
       <button className = "btn btn-primary mt-3" onClick={placeOrder}>
@@ -65,6 +69,14 @@ function ViewOrder() {
             <p>Order ID: {confirmation.uuid}</p>
             <p>Price: {confirmation.price} kr</p>
             <p>Timestamp: {confirmation.timestamp}</p>
+            <p>Your Order:</p>
+            <ul>
+              {confirmation.order.map((saladIngredients, index) => (
+                <li key={index}>
+                  Salad {index + 1}: {saladIngredients.join(', ')}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       )}
